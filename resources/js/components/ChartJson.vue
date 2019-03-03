@@ -1,11 +1,15 @@
 <template>
 <div>
+    <div v-if="!loaded" class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
     <horizontal-bar-chart v-if="loaded" :height="200" :chartdata="data" :option="options"></horizontal-bar-chart>
 </div>
 </template>
 
 <script>
-    import _ from 'lodash';
 
     export default {
         data: function () {
@@ -36,10 +40,15 @@
             axios.get('/test.json')
             .then((res)=> {
                 let data = res.data;
-                app.data = {
+                let formatedData = {
                     labels: data.labels,
-                    datasets: data.data
+                    datasets: [{
+                        label: 'My First dataset',
+                        data: data.data
+                    }]
+
                 };
+                app.data = formatedData;
                 app.loaded = true;
             })
             .catch((e)=>{
